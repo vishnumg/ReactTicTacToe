@@ -1,76 +1,46 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Cell from './Cell'
+import Utils from './Utils';
+
+import cloneDeep from 'lodash/cloneDeep';
+
+const initState = {
+    boardState: [[0, 0, 0],
+                 [0, 0, 0],
+                 [0, 0, 0]],
+    curPlayer : 0,
+    gameState: 0,
+    turnCount: 0
+};
 
 export default class Board extends Component {
-    state = {
-        boardState: [[0, 0, 0],
-                     [0, 0, 0],
-                     [0, 0, 0]],
-        curPlayer : 0,
-        gameState: 0
-    };
 
-    allEqual = arr => arr.every( v => v === arr[0] )
-    
-    getColumn = (array, column) => array.map(e => e[column]);
-    getDiags = (matrix) => {
-        let diags = [[], []]
-        let matrixLength = matrix.length;
-        for (var i = 0; i < matrixLength; i++) {
-            diags[0].push(matrix[i][i]);
-            diags[1].push(matrix[i][matrixLength-i-1]);
-        }
-        console.log(diags);
-        return diags;
-      }
-    
-    checkRows = () => {
-        for (let i = 0; i < this.state.boardState.length; i++) {
-            const row = this.state.boardState[i]
-            if(this.allEqual(row) && row[0] > 0) {
-                let winner = row[0] - 1;
-                return winner;
-            }
-        }
-        return -1;
-    }
+    state = cloneDeep(initState);
 
-    checkCols = () => {
-        for (let i = 0; i < 3; i++) {
-            let col = this.getColumn(this.state.boardState, i);
-            if(this.allEqual(col) && col[0] > 0)
-                return col[0];
-        }
-        return -1;
-    }
-   
-    checkDiags = () => {
-        let diags = this.getDiags(this.state.boardState);
-        for (let i = 0; i < diags.length; i++) {
-            const diag = diags[i];
-            if(this.allEqual(diag) && diag[0] > 0)
-                return diag[0];
-        }
-        return -1;
-    }
+    utils = new Utils(this.state.boardState);
 
-    checkForWinner = () => {
-        let res = this.checkRows();
-        console.log(res);
-        if(res < 0){
-            res = this.checkCols();
-            console.log('col', res);
-        }
-        if(res < 0){
-            res = this.checkDiags();
-            console.log('diag', res);    
-        }
-        return res;
+    reset = () => {
+        let state = cloneDeep(initState)
+        this.setState({
+            boardState: [[0, 0, 0],
+                         [0, 0, 0],
+                         [0, 0, 0]],
+            curPlayer : 0,
+            gameState: 0,
+            turnCount: 0
+        });
+        console.log("reset")
     }
 
     won = (winner) => {
-        alert("Player " + winner + " Won!");
+        alert("Player " + (winner + 1) + " Won!");
+        this.reset();
+    }
+
+    draw = () => {
+        alert("Draw!");
+        this.reset()
     }
 
     clickHandler = (row, col) => {
@@ -80,12 +50,15 @@ export default class Board extends Component {
         this.setState(
             {
                 curPlayer: newCurPlayer,
-                boardState: newBoardState
+                boardState: newBoardState,
+                turnCount: this.state.turnCount + 1
             }
         )
-        let res = this.checkForWinner()
-        if( res >= 0)
+        let res = this.utils.checkForWinner(this.state.boardState)
+        if(res >= 0)
             this.won(res);
+        else if(this.state.turnCount >= 8)
+            this.draw();
     }
 
     render() {
@@ -105,11 +78,6 @@ export default class Board extends Component {
                     <Cell onClick={this.clickHandler} row='2' col='0' val={this.state.boardState[2][0]}/>
                     <Cell onClick={this.clickHandler} row='2' col='1' val={this.state.boardState[2][1]}/>
                     <Cell onClick={this.clickHandler} row='2' col='2' val={this.state.boardState[2][2]}/>
-                </div>
-
-                <div>
-                {this.state.boardState}
-                {this.state.curPlayer}
                 </div>
             </div>
         )
