@@ -1,5 +1,4 @@
 import React from 'react'
-import logo from '../logo.svg';
 import blankImg from './blank.png';
 import xImg from './x.png';
 import oImg from './o.png';

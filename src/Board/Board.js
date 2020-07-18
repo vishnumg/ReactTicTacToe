@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import Cell from './Cell'
 import Utils from './Utils';
 
@@ -60,23 +59,21 @@ export default class Board extends Component {
     }
 
     render() {
+        let boardElements = [];
+        for (let i = 0; i < 3; i++) {
+            let row = [];
+            for (let j = 0; j < 3; j++) {
+                row.push(<Cell onClick={this.clickHandler} row={i} col={j} val={this.state.boardState[i][j]}/>);
+            }
+
+            boardElements.push(
+                <div>{row}</div>
+            )
+        }
+
         return (
             <div>
-                <div>
-                    <Cell onClick={this.clickHandler} row='0' col='0' val={this.state.boardState[0][0]}/>
-                    <Cell onClick={this.clickHandler} row='0' col='1' val={this.state.boardState[0][1]}/>
-                    <Cell onClick={this.clickHandler} row='0' col='2' val={this.state.boardState[0][2]}/>
-                </div>
-                <div>
-                    <Cell onClick={this.clickHandler} row='1' col='0' val={this.state.boardState[1][0]}/>
-                    <Cell onClick={this.clickHandler} row='1' col='1' val={this.state.boardState[1][1]}/>
-                    <Cell onClick={this.clickHandler} row='1' col='2' val={this.state.boardState[1][2]}/>
-                </div>
-                <div>
-                    <Cell onClick={this.clickHandler} row='2' col='0' val={this.state.boardState[2][0]}/>
-                    <Cell onClick={this.clickHandler} row='2' col='1' val={this.state.boardState[2][1]}/>
-                    <Cell onClick={this.clickHandler} row='2' col='2' val={this.state.boardState[2][2]}/>
-                </div>
+                { boardElements}
             </div>
         )
     }
