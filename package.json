@@ -4,7 +4,6 @@
   "private": true,
   "homepage": "http://vishnumg.github.io/ReactTicTacToe",
   "dependencies": {
-    "lodash": "^4.17.19",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "1.1.5"

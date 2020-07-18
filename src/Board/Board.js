@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 import Cell from './Cell'
 import Utils from './Utils';
 
-import cloneDeep from 'lodash/cloneDeep';
-
 const initState = {
     boardState: [[0, 0, 0],
                  [0, 0, 0],
@@ -16,12 +14,12 @@ const initState = {
 
 export default class Board extends Component {
 
-    state = cloneDeep(initState);
+    state = {...initState};
 
     utils = new Utils(this.state.boardState);
 
     reset = () => {
-        let state = cloneDeep(initState)
+        let state = {...initState};
         this.setState({
             boardState: [[0, 0, 0],
                          [0, 0, 0],
